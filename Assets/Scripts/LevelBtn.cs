@@ -18,5 +18,11 @@ public class LevelBtn : MonoBehaviour
     {
         UserDataManager.Instance.Level = level;
         GameSceneManager.Instance.popupSelectLevel.gameObject.SetActive(false);
+        Field.Instance.LoadLevelData();
+
+
+        Field.Instance.LoadListColor();
+
+        Field.Instance.LoadData();
     }
 }

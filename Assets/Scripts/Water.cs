@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Water : MonoBehaviour
 {
-    [SerializeField] private Image waterImg;
+    public Image waterImg;
 
     public WaterColor color;
 
