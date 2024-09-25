@@ -86,12 +86,12 @@ public class Field : MonoBehaviour
     public void LoadListLevelData()
     {
         dataLevel = Resources.LoadAll<LevelDataSO>("ScriptableObjects");
-        listLevels.OrderByDescending(t => int.Parse(t.level.ToString()) ).ToList();
         foreach(LevelDataSO item in dataLevel)
         {
             listLevels.Add(item);
             
         }
+        listLevels = listLevels.OrderBy(t => t.level).ToList();
     }
 
     public void LoadLevelData()
@@ -102,6 +102,7 @@ public class Field : MonoBehaviour
         colorAmount = listLevels[currentLevel].colorAmount;
         bottleAmount = listLevels[currentLevel].bottleAmount;
         levelTarget = colorAmount;
+        levelProcess = 0;
 
         for(int i = 0; i < colorAmount; i++)
         {
@@ -181,51 +182,10 @@ public class Field : MonoBehaviour
     bool canMove = false;
 
     public int indexColorSelect1;
-    public void CheckColorWater()
+    public void CheckColorWater(Bottle start, Bottle end)
     {
 
-        if (bottleSelected1 == bottleSelected2) return;
-        else
-        {
-            blankSlotColor = bottleSelected2.listWaterItem.Count - bottleSelected2.listwaterItemActive.Count;
-
-            if (bottleSelected1.listwaterItemActive.Count == 0) colorSelect1 = WaterColor.none;
-            else colorSelect1 = bottleSelected1.listwaterItemActive[0].color;
-
-            if (bottleSelected2.listwaterItemActive.Count != 0)
-            {
-                colorSelect2 = bottleSelected2.listwaterItemActive[0].color;
-            }
-            else colorSelect2 = colorSelect1;
-
-
-            for (int i = 0; i < bottleSelected1.listwaterItemActive.Count; i++)
-            {
-                if (bottleSelected1.listwaterItemActive[i].color == colorSelect1)
-                {
-                    colorCount1++;
-                 
-                }
-                else break;
-            }
-
-            for(int i = 0; i< bottleSelected1.listWaterItem.Count; i++)
-            {
-                if (bottleSelected1.listWaterItem[i].color == colorSelect1)
-                {
-                    indexColorSelect1 = i;
-                }
-                else if (bottleSelected1.listWaterItem[i].color == WaterColor.none) continue;
-                else break;
-            }
-
-
-            if (colorSelect1 == colorSelect2 && blankSlotColor > 0)
-            {
-                canMove = true;
-            }
-            else canMove = false;
-
+        canMove = CheckWaterSimilar(start, end);
 
             if (canMove)
             {
@@ -236,8 +196,62 @@ public class Field : MonoBehaviour
 
             Debug.Log("CAN MOVE: " + canMove);
 
-        }
+
     }
+
+    public bool CheckWaterSimilar(Bottle start, Bottle end)
+    {
+        colorCount1 = 0;
+        indexColorSelect1 = 0;
+        bool canPour = false;
+        if (start == end) return false;
+        else
+        {
+            blankSlotColor = end.listWaterItem.Count - end.listwaterItemActive.Count;
+
+            if (start.listwaterItemActive.Count == 0) colorSelect1 = WaterColor.none;
+            else colorSelect1 = start.listwaterItemActive[0].color;
+
+            if (end.listwaterItemActive.Count != 0)
+            {
+                colorSelect2 = end.listwaterItemActive[0].color;
+            }
+            else colorSelect2 = colorSelect1;
+
+
+            for (int i = 0; i < start.listwaterItemActive.Count; i++)
+            {
+                if (start.listwaterItemActive[i].color == colorSelect1)
+                {
+                    colorCount1++;
+
+                }
+                else break;
+            }
+
+            for (int i = 0; i < start.listWaterItem.Count; i++)
+            {
+                if (start.listWaterItem[i].color == colorSelect1 && colorCount1 <= blankSlotColor)
+                {
+                    indexColorSelect1 = i;
+                }
+                else if (start.listWaterItem[i].color == WaterColor.none) continue;
+                else break;
+            }
+
+
+
+            if (colorSelect1 == colorSelect2 && blankSlotColor > 0)
+            {
+                canPour = true;
+            }
+            else canPour = false;
+        }
+
+
+        return canPour;
+    }
+
 
     public void MoveWaterItem()
     {
@@ -263,7 +277,7 @@ public class Field : MonoBehaviour
 
                 index = 0;
                 //giam o mau cho bottle 1
-                for (int i = 0; i <=indexColorSelect1; i++)
+                for (int i = indexColorSelect1 ; i >=0; i--)
                 {
 
                         bottleSelected1.listWaterItem[i].waterImg.gameObject.SetActive(false);
@@ -287,7 +301,7 @@ public class Field : MonoBehaviour
 
                 index = 0;
                 //indexColorSelect1 = blankSlotColor-1;
-                for (int i =0; i <= indexColorSelect1; i--)
+                for (int i = indexColorSelect1; i >=0; i--)
                 {
                     if (index < blankSlotColor)
                     {
@@ -322,12 +336,37 @@ public class Field : MonoBehaviour
             }
         }
 
-        bottleSelected2.CheckCompleteBottle();
+        CheckCompleteBottle(bottleSelected2);
+        CheckWater();
         //ResetBottle();
 
     }
 
+    public void CheckCompleteBottle(Bottle bottleCheck)
+    {
+        int colorSimilarCount = 0;
+        if (bottleCheck.listwaterItemActive.Count == 5)
+        {
+            WaterColor colorCheck = bottleCheck.listwaterItemActive[0].color;
 
+            foreach (Water item in bottleCheck.listwaterItemActive)
+            {
+                if (item.color == colorCheck)
+                {
+                    colorSimilarCount++;
+                }
+            }
+        }
+
+
+        if (colorSimilarCount == 5)
+        {
+            bottleCheck.bottleBtn.interactable = false;
+            bottleCheck.isFull = true;
+            levelProcess++;
+            CheckWin();
+        }
+    }
 
 
     IEnumerator PourAnim()
@@ -346,7 +385,7 @@ public class Field : MonoBehaviour
         yield return new WaitForSeconds(0.7f);
 
         bottle1.bottleBtn.interactable = true;
-        bottle2.bottleBtn.interactable = true;
+        if(!bottle2.isFull) bottle2.bottleBtn.interactable = true;
         bottle1.gameObject.transform.DORotate(new Vector3(0, 0, 0), 0.2f);
         bottle1.gameObject.transform.DOLocalMove(pos, 0.2f);
 
@@ -371,53 +410,69 @@ public class Field : MonoBehaviour
     public Bottle itemCheck;
     public void CheckWater()
     {
-        if (CheckEmptyBottle()) return;
-        else
-        {
-            try
-            {
-                int index = 0;
-                for (int j = 0; j < listBottle.Count; j++)
-                {
-                    itemCheck = listBottle[index];
-                    if (listBottle[j].listwaterItemActive[0].color != itemCheck.listwaterItemActive[0].color)
-                    {
-                        isLose = true;
-                    }
-                    else if(listBottle[j].listwaterItemActive[0].color == itemCheck.listwaterItemActive[0].color)
-                    {
-                        if (listBottle[j].listwaterItemActive.Count == 5 || itemCheck.listwaterItemActive.Count == 5)
-                        {
-                            isLose = true;
-                        }
-                        else
-                        {
-                            isLose = false;
-                            break;
-                        }
+        bool canPlay = true;
 
+        for(int i = 0; i< listBottle.Count; i++)
+        {
+            for(int j = 0; j < listBottle.Count; j++)
+            {
+                canPlay = CheckWaterSimilar(listBottle[i], listBottle[j]);
+
+                if (canPlay)
+                {
+                    if (colorCount1 > blankSlotColor)
+                    {
+                        canPlay = false;
+                        continue;
                     }
+
                     else
                     {
-                        isLose = false;
+                        canPlay = true;
                         break;
                     }
-                    index++;
                 }
-
-                Debug.Log("isLose: " + isLose);
+                else continue;
             }
-            catch(Exception ex)
-            {
-                Debug.Log("error: " + ex);
-            }
-
-            
+            if (canPlay) break;
+            else continue;
         }
 
+        /*
+        int index = 0;
+        for (int j = 0; j < listBottle.Count; j++)
+        {
+            itemCheck = listBottle[index];
+            if (listBottle[j].listwaterItemActive[0].color != itemCheck.listwaterItemActive[0].color)
+            {
+                isLose = true;
+            }
+            else if(listBottle[j].listwaterItemActive[0].color == itemCheck.listwaterItemActive[0].color)
+            {
+                if (listBottle[j].listwaterItemActive.Count == 5 || itemCheck.listwaterItemActive.Count == 5)
+                {
+                    isLose = true;
+                }
+                else
+                {
+                    isLose = false;
+                    break;
+                }
+
+            }
+            else
+            {
+                isLose = false;
+                break;
+            }
+            index++;
+        }
+
+        Debug.Log("isLose: " + isLose);
+*/
 
 
-        if(isLose)
+        if (!canPlay)
         {
             GameSceneManager.Instance.popupLose.gameObject.SetActive(true);
         }

@@ -20,7 +20,7 @@ public class Bottle : MonoBehaviour
     public int index;
     public Image waterBg;
 
-
+    public bool isFull = false;
 
     public Button bottleBtn;
 
@@ -125,7 +125,7 @@ public class Bottle : MonoBehaviour
         if (Field.Instance.bottleSelected2 != null)
         {
 
-            Field.Instance.CheckColorWater();
+            Field.Instance.CheckColorWater(Field.Instance.bottleSelected1, Field.Instance.bottleSelected2);
 
             Field.Instance.colorCount1 = 0;
         }
@@ -138,29 +138,6 @@ public class Bottle : MonoBehaviour
    
     
 
-    public void CheckCompleteBottle()
-    {
-        int colorSimilarCount = 0;
-        if (this.listwaterItemActive.Count == maxWater)
-        {
-            WaterColor colorCheck = listwaterItemActive[0].color;
 
-            foreach(Water item in listwaterItemActive)
-            {
-                if(item.color == colorCheck)
-                {
-                    colorSimilarCount++;
-                }
-            }
-        }
-
-
-        if(colorSimilarCount == maxWater)
-        {
-            bottleBtn.interactable = false;
-            Field.Instance.levelProcess++;
-            Field.Instance.CheckWin();
-        }
-    }
 
 }
