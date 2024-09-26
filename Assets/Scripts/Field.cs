@@ -20,6 +20,7 @@ public class Field : MonoBehaviour
     [SerializeField] private Bottle bottle;
     [SerializeField] private Transform gameField;
     public Image bg;
+    public GridLayoutGroup field;
 
     [Header("BOTTLE SELECT")]
 
@@ -96,6 +97,7 @@ public class Field : MonoBehaviour
 
     public void LoadLevelData()
     {
+        
         currentLevel = UserDataManager.Instance.Level;
 
         levelTxt.text = "Level: " + currentLevel.ToString();
@@ -104,12 +106,19 @@ public class Field : MonoBehaviour
         levelTarget = colorAmount;
         levelProcess = 0;
 
+
+        isLose = false;
+        isWin = false;
+        if (bottleAmount < 8) field.constraintCount = 1;
+        else if (bottleAmount <= 14) field.constraintCount = 2;
+        else if (bottleAmount <= 21) field.constraintCount = 3;
+
         for(int i = 0; i < colorAmount; i++)
         {
-            waterColor = (WaterColor)Random.Range(1, 13);
+            waterColor = (WaterColor)Random.Range(1, 17);
             while(listLevelWaterColor.Contains(waterColor))
             {
-                waterColor = (WaterColor)Random.Range(1, 13);
+                waterColor = (WaterColor)Random.Range(1, 17);
             }
             listLevelWaterColor.Add(waterColor);
         }
@@ -259,7 +268,7 @@ public class Field : MonoBehaviour
 
         if (blankSlotColor > 0)
         {
-            StartCoroutine(PourAnim());
+            StartCoroutine(PourAnim(CheckWinLose));
             
             if(colorCount1 <= blankSlotColor)
             {
@@ -369,7 +378,7 @@ public class Field : MonoBehaviour
     }
 
 
-    IEnumerator PourAnim()
+    IEnumerator PourAnim(Action<bool> callback)
     {
         Bottle bottle1 = bottleSelected1;
         Bottle bottle2 = bottleSelected2;
@@ -388,23 +397,41 @@ public class Field : MonoBehaviour
         if(!bottle2.isFull) bottle2.bottleBtn.interactable = true;
         bottle1.gameObject.transform.DORotate(new Vector3(0, 0, 0), 0.2f);
         bottle1.gameObject.transform.DOLocalMove(pos, 0.2f);
-
-
         ResetBottle();
+
+
+        yield return new WaitForSeconds(.5f);
+        callback(true);
        //Field.Instance.CheckWater();
     }
 
 
+    public void CheckWinLose(bool isEndAnim)
+    {
+
+        if(isWin && isEndAnim)
+        {
+            GameSceneManager.Instance.popupWin.SetActive(true);
+        }
+
+        if(isLose && isEndAnim)
+        {
+            GameSceneManager.Instance.popupLose.SetActive(true);
+        }
+        
+    }
 
 
+    public bool isWin;
     public void CheckWin()
     {
         if(levelProcess == levelTarget)
         {
-            Debug.Log("====CONGRATULATION====");
-            GameSceneManager.Instance.popupWin.gameObject.SetActive(true);
+            isWin = true;
         }
     }
+
+
     public bool isLose = false;
     public bool isEnd = false;
     public Bottle itemCheck;
@@ -474,7 +501,8 @@ public class Field : MonoBehaviour
 
         if (!canPlay)
         {
-            GameSceneManager.Instance.popupLose.gameObject.SetActive(true);
+            isLose = true;
+            
         }
     }
 

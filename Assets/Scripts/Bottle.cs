@@ -116,11 +116,13 @@ public class Bottle : MonoBehaviour
         {
             Field.Instance.bottleSelected1 = this;
             this.gameObject.transform.DOScale(1.1f, 0.1f);
+            
         }
         else
         {
             Field.Instance.bottleSelected2 = this;
             Field.Instance.bottleSelected1.gameObject.transform.DOScale(1.0f, 0.1f);
+           
         }
         if (Field.Instance.bottleSelected2 != null)
         {

@@ -16,47 +16,59 @@ public class Water : MonoBehaviour
         switch(waterColor)
         {
             case WaterColor.red:
-                waterImg.color = new Color32(213, 27, 27, 255);
+                waterImg.color = new Color32(147, 31, 26, 255);
                 break;
             case WaterColor.green:
-                waterImg.color= new Color32(24, 223, 39, 255);
+                waterImg.color= new Color32(50, 205, 50, 255);
                 break;
            case WaterColor.blue:
-                waterImg.color= new Color32(6, 74, 188, 255);
+                waterImg.color= new Color32(45, 34, 145, 255);
                 break;
            case WaterColor.yellow:
-                waterImg.color= new Color32(250, 231, 40, 255);
+                waterImg.color= new Color32(255, 215, 0, 255);
                 break;
            case WaterColor.cyan:
-                waterImg.color = new Color32(78, 252, 234, 255);
+                waterImg.color = new Color32(20, 232, 183, 255);
                 //waterImg.color= Color.cyan;
                 break;
             case WaterColor.violet:
-                waterImg.color = new Color32(233, 59, 246, 255);
+                waterImg.color = new Color32(199, 21, 133, 255);
                 break;
             case WaterColor.orange:
-                waterImg.color = new Color32(248, 155, 24, 255);
+                waterImg.color = new Color32(234, 140, 69, 255);
                 break;
             case WaterColor.teal:
-                waterImg.color = new Color32(79, 144, 109, 255);
+                waterImg.color = new Color32(0, 81, 84, 255);
                 break;
             case WaterColor.pink:
-                waterImg.color = new Color32(246, 150, 197, 255);
+                waterImg.color = new Color32(188, 76, 100, 255);
                 break;
             case WaterColor.gray:
-                waterImg.color = new Color32(167, 175, 174, 255);
+                waterImg.color = new Color32(101, 101, 103, 255);
                 break;
             case WaterColor.cinnamon:
-                waterImg.color = new Color32(182, 118, 41, 255);
+                waterImg.color = new Color32(210, 105, 30, 255);
                 break;
             case WaterColor.chocolate:
-                waterImg.color = new Color32(140, 49, 24, 255);
+                waterImg.color = new Color32(100, 26, 26, 255);
                 break;
             case WaterColor.jade:
-                waterImg.color = new Color32(2, 217, 177, 255);
+                waterImg.color = new Color32(0, 168, 107, 255);
+                break;
+            case WaterColor.navajo:
+                waterImg.color = new Color32(225, 222, 173, 255);
+                break;
+            case WaterColor.crimson:
+                waterImg.color = new Color32(202, 23, 8, 255);
+                break;
+            case WaterColor.plum:
+                waterImg.color = new Color32(221, 160, 221, 255);
+                break;
+            case WaterColor.sky:
+                waterImg.color = new Color32(71, 136, 195, 255);
                 break;
             case WaterColor.none:
-                waterImg.color = Color.white;
+                waterImg.color = new Color32(255, 255, 255, 0);
                 break;
         }
     }
@@ -77,5 +89,9 @@ public enum WaterColor
     gray,
     cinnamon,
     chocolate,
-    jade
+    jade,
+    navajo,
+    crimson,
+    plum,
+    sky
 }

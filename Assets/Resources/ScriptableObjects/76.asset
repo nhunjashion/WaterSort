@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: 76
   m_EditorClassIdentifier: 
   level: 76
-  colorAmount: 8
-  bottleAmount: 10
+  colorAmount: 14
+  bottleAmount: 17
