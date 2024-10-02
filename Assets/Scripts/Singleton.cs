@@ -1,46 +1,50 @@
 using UnityEngine;
 
-public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+namespace WaterSort
 {
-    public bool IsPersistence;
-    protected static T m_Instance;
-
-    public static T Instance
+    public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
-        get
-        {
-            return Singleton<T>.m_Instance;
-        }
-        set
-        {
-            m_Instance = value;
-        }
-    }
+        public bool IsPersistence;
+        protected static T m_Instance;
 
-    protected virtual void Awake()
-    {
-
-        if (this.IsPersistence)
+        public static T Instance
         {
-            if (object.ReferenceEquals((object)Singleton<T>.m_Instance, (object)null))
+            get
             {
-                Singleton<T>.m_Instance = (object)this as T;
-                Object.DontDestroyOnLoad((Object)this.gameObject);
+                return Singleton<T>.m_Instance;
+            }
+            set
+            {
+                m_Instance = value;
+            }
+        }
+
+        protected virtual void Awake()
+        {
+
+            if (this.IsPersistence)
+            {
+                if (object.ReferenceEquals((object)Singleton<T>.m_Instance, (object)null))
+                {
+                    Singleton<T>.m_Instance = (object)this as T;
+                    Object.DontDestroyOnLoad((Object)this.gameObject);
+                }
+                else
+                {
+                    if (object.ReferenceEquals((object)Singleton<T>.m_Instance, (object)((object)this as T)))
+                        return;
+
+                    Object.Destroy((Object)this.gameObject);
+                }
             }
             else
-            {
-                if (object.ReferenceEquals((object)Singleton<T>.m_Instance, (object)((object)this as T)))
-                    return;
-
-                Object.Destroy((Object)this.gameObject);
-            }
+                Singleton<T>.m_Instance = (object)this as T;
         }
-        else
-            Singleton<T>.m_Instance = (object)this as T;
-    }
 
-    protected virtual void OnDestroy()
-    {
-        Singleton<T>.m_Instance = (T)null;
+        protected virtual void OnDestroy()
+        {
+            Singleton<T>.m_Instance = (T)null;
+        }
     }
 }
+

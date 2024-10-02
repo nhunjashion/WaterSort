@@ -3,26 +3,30 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class LevelBtn : MonoBehaviour
+namespace WaterSort
 {
-    public TextMeshProUGUI levelTxt;
-    public int level;
-
-    public void SetLevelText(string text)
+    public class LevelBtn : MonoBehaviour
     {
-        levelTxt.text = text;
-        level = int.Parse(text);
-    }
+        public TextMeshProUGUI levelTxt;
+        public int level;
 
-    public void OnClick()
-    {
-        UserDataManager.Instance.Level = level;
-        GameSceneManager.Instance.popupSelectLevel.gameObject.SetActive(false);
-        Field.Instance.LoadLevelData();
+        public void SetLevelText(string text)
+        {
+            levelTxt.text = text;
+            level = int.Parse(text);
+        }
 
+        public void OnClick()
+        {
+            Field.Instance.currentLevel = level;
 
-        Field.Instance.LoadListColor();
+            GameSceneManager.Instance.popupSelectLevel.SetActive(false);
+            GameSceneManager.Instance.popupMenu.SetActive(false);
 
-        Field.Instance.LoadData();
+            Field.Instance.LoadLevelData();
+            Field.Instance.LoadListColor();
+            Field.Instance.LoadData();
+        }
     }
 }
+

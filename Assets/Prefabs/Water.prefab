@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 952016072276336793}
   - component: {fileID: 1657916944825253627}
   - component: {fileID: 6885587842482265193}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,18 +58,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6830188, g: 0.091498755, b: 0.091498755, a: 1}
+  m_Color: {r: 0.011811986, g: 0.89433956, b: 0.078220844, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 0b533e6ba653154479255dab4ce82ea2, type: 3}
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 1
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 8792161030659321293}
   - component: {fileID: 1262682515285002673}
   - component: {fileID: -2421744154322132652}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7010420761465401124}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -166,3 +166,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waterImg: {fileID: 6885587842482265193}
   color: 5
+  index: 0
