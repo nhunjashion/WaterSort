@@ -70,7 +70,7 @@ namespace WaterSort
             LoadListLevelData();
         }
 
-
+        bool isReset = false;
         private void Start()
         {
             LoadLevelData();
@@ -161,8 +161,32 @@ namespace WaterSort
             }
 
             StartCoroutine(EnabledGrid());
+
+            int value = 0;
+            foreach(var item in listBottle)
+            {
+                value = CheckWaterAmount(item);
+                if (value == 5)
+                {
+                    isReset = true;
+                }
+                else continue;
+            }
+
+            ResetMap();
         }
 
+
+        public void ResetMap()
+        {
+            if (isReset)
+            {
+                LoadLevelData();
+                LoadListColor();
+                LoadData();
+            }
+            else return;
+        }
         public IEnumerator EnabledGrid()
         {
             yield return new WaitForEndOfFrame();
@@ -309,7 +333,7 @@ namespace WaterSort
         }
 
 
-        public void CheckCompleteBottle(Bottle bottleCheck)
+        public int CheckWaterAmount(Bottle bottleCheck)
         {
             int colorSimilarCount = 0;
             if (bottleCheck.listwaterItemActive.Count == 5)
@@ -324,7 +348,14 @@ namespace WaterSort
                     }
                 }
             }
+            return colorSimilarCount;
+        }
 
+
+
+        public void CheckCompleteBottle(Bottle bottleCheck)
+        {
+            int colorSimilarCount = CheckWaterAmount(bottleCheck);
 
             if (colorSimilarCount == 5)
             {
